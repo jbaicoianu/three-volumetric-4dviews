@@ -1,0 +1,45 @@
+﻿<!doctype html>
+<html lang="fr">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<title>4DViews - Webplayer Streaming</title>
+		
+		<link href="css/style.css" rel="stylesheet" type="text/css">
+		<link href="js/fdvWebplayer/css/fdvWebplayer.css" rel="stylesheet" type="text/css">
+		
+	</head>
+
+	<body style="background-color:#1a1e25;">
+		<div style="position:absolute;top:50%;left:50%; max-width:900px;transform: translate(-50%,-50%);-webkit-transform: translate(-50%,-50%);width: 100%;max-width: 900px;text-align: center;">
+					
+				<div id="container4D"></div>
+
+			<div style="position:relative;position: relative;text-align: center;padding: 32px;">
+				<a style="" href="#" class="triggerSequence" target="_self" data-desktop-sequence="http://a9q6r5f5.stackpathcdn.com/ltd/Sample4DViews_PresentingHOLOSYS_30fps_FILTERED_DESKTOP_STD.4ds" 
+                                                                            data-mobile-sequence="http://a9q6r5f5.stackpathcdn.com/ltd/Sample4DViews_PresentingHOLOSYS_30fps_FILTERED_MOBILE_STD.4ds" 
+                                                                            data-rotation="" 
+                                                                            data-audio-file="http://a9q6r5f5.stackpathcdn.com/ltd/Sample4DViews_PresentingHOLOSYS_audio.wav">Load Sequence</a>	
+			</div>
+			
+
+		</div>
+	
+		<!-- WebPlayer JS -->
+		<script src="js/fdvWebplayer/resource_manager.js"></script>
+		<script src="js/fdvWebplayer/player4D.js"></script>
+		<script src="js/fdvWebplayer/viewer.js"></script>
+			
+		<script src="js/fdvWebplayer/threejs/WebGL.js"></script>
+		<script src="js/fdvWebplayer/threejs/three.js"></script>
+		<script src="js/fdvWebplayer/threejs/TrackballControls.js"></script>
+		<script src="js/fdvWebplayer/threejs/OrbitControls.js"></script>
+		<script src="js/fdvWebplayer/threejs/stats.js"></script>
+			
+		<script src="js/fdvWebplayer/playerUI.js"></script>
+			
+		<script async src="js/fdvWebplayer/CODEC.js"></script>
+	
+	</body>
+</html>

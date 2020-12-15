@@ -1,0 +1,41 @@
+#AuthUserFile /home/holocamfwy/prod1/www/.htpasswd
+#AuthName "Accès Restreint"
+#AuthType Basic
+#Require valid-user
+
+Options +followsymlinks
+RewriteEngine On
+Options -MultiViews
+Options All -Indexes
+
+#Vers HTTPS
+#RewriteCond %{SERVER_PORT} 80
+#RewriteRule ^(.*)$ https://dev.4dviews.com/$1 [R=301,L]
+
+#Legal mentions
+#RewriteRule ^legal-mentions$ mention.php [L]
+
+#Contact
+RewriteRule ^contact-us$ page/contact/viewContact.php [L]
+
+#Page
+RewriteRule ^([a-z-0-9]*)/([0-9]*)$ page/viewPage.php?slug=$1&page=$2 [L]
+
+#Product
+RewriteRule ^holosys-volumetric-video-system$ page/product/viewProduct.php [L]
+
+#Ressources
+RewriteRule ^volumetric-resources$ page/resources/viewResources.php [L]
+
+#Showreel
+RewriteRule ^volumetric-video-showreel$ page/showreel/viewShowreel.php [L]
+
+#Search
+RewriteRule ^search$ page/viewSearch.php [L]
+
+ErrorDocument 403 /page/view403.php
+ErrorDocument 404 /page/view404.php
+AddType application/unity .unity
+AddType script/memgz .memgz
+AddType script/jsgz .jsgz
+AddType script/datagz .datagz

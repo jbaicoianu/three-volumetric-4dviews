@@ -1,0 +1,37 @@
+#poster4D{
+	background-image:url('../img/web_demo_2.jpg');
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	z-index: 3;
+	background-size: cover;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-position: top;	
+}
+
+
+.triggerSequence{
+	background: #2b303b;
+	padding: 8px;
+	font-family: Sans-serif;
+	color: #fff;
+	text-decoration: none;
+	border: 1px solid #000;
+	margin: 8px;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	transition:ease 250ms;
+	-webkit-transition:ease 250ms;
+	-moz-transition:ease 250ms;
+}
+
+.triggerSequence:hover{
+	background: #576178;
+	color: #fff;
+	border: 1px solid #777;
+}

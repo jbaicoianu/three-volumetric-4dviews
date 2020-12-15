@@ -1,0 +1,23 @@
+{
+  "name": "three-volumetric-4dviews",
+  "version": "1.0.0",
+  "description": "ThreeJS loader for 4dviews volumetric video format",
+  "main": "src/three-volumetric-4dviews.js",
+  "directories": {
+    "example": "examples",
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jbaicoianu/three-volumetric-4dviews.git"
+  },
+  "author": "James Baicoianu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jbaicoianu/three-volumetric-4dviews/issues"
+  },
+  "homepage": "https://github.com/jbaicoianu/three-volumetric-4dviews#readme"
+}

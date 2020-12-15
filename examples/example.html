@@ -1,0 +1,87 @@
+<html>
+  <body>
+    <script type="module">
+      import * as THREE from 'https://unpkg.com/three@0.123.0/build/three.module.js';
+      import { OrbitControls } from 'https://unpkg.com/three@0.123.0/examples/jsm/controls/OrbitControls.js';
+      import { Volumetric4DViewsLoader } from '../src/three-volumetric-4dviews.js';
+
+      let camera, scene, renderer;
+
+      init();
+      render();
+
+      function init() {
+
+        const container = document.createElement( 'div' );
+        document.body.appendChild( container );
+
+        camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.25, 20 );
+        camera.position.set( - 1.8, 0.6, 2.7 );
+
+        scene = new THREE.Scene();
+
+        renderer = new THREE.WebGLRenderer( { antialias: true } );
+        renderer.setPixelRatio( window.devicePixelRatio );
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1;
+        renderer.outputEncoding = THREE.sRGBEncoding;
+        container.appendChild( renderer.domElement );
+
+        const controls = new OrbitControls( camera, renderer.domElement );
+        controls.addEventListener( 'change', render ); // use if there is no animation loop
+        controls.minDistance = 2;
+        controls.maxDistance = 10;
+        controls.target.set( 0, 0, - 0.2 );
+        controls.update();
+
+        window.addEventListener( 'resize', onWindowResize, false );
+
+        let loader = new Volumetric4DViewsLoader();
+        loader.load('/~bai/4dview/WebPlayer_v1.0.0/example/data/Sample4DViews_PresentingHOLOSYS_30fps_FILTERED_DESKTOP_STD.4ds')
+          .then(model => {
+            console.log('4dviews loader loaded model', model);
+            model.addEventListener('change', (ev) => {
+              render();
+            });
+            scene.add(model);
+          });
+        loader.load('/~bai/4dview/WebPlayer_v1.0.0/example/data/bmx-2020_60_00fps_FILTERED_DESKTOP_2880.4ds')
+          .then(model => {
+            console.log('4dviews loader loaded model 2', model);
+            model.addEventListener('change', (ev) => {
+              render();
+            });
+            model.position.x = 5;
+            scene.add(model);
+          });
+
+      }
+
+      function onWindowResize() {
+
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize( window.innerWidth, window.innerHeight );
+
+        render();
+
+      }
+
+      function render() {
+
+        renderer.render( scene, camera );
+
+      }
+
+      function frame() {
+        render();
+        requestAnimationFrame(frame);
+      }
+
+      frame();
+
+    </script>
+  </body>
+</html>
