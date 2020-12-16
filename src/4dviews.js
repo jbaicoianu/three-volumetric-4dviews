@@ -40,7 +40,7 @@ class VolumetricFrame4DViews {
   }
 }
 class VolumetricPlayer4DViews extends EventTarget {
-  constructor(lighting=true) {
+  constructor(lighting=false) {
     super();
     this.framecache = [];
     this.cacheframes = 30;
