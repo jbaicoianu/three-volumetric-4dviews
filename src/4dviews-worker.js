@@ -38,8 +38,7 @@ function Decode() {
 	}
 
 	/* Decoding loop, 3*fps */
-	//decodeLoop = setInterval(function () {
-  while (true) {
+	decodeLoop = setInterval(function () {
 		/* Do not decode if enough meshes in cache */
 		if (meshesCache.length >= maxCacheSize)
 			return;
@@ -63,7 +62,7 @@ function Decode() {
 		if (mesh4D){
 			meshesCache.push(mesh4D);
 		}
-	}//, dt);
+	}, dt);
 	
 	isDecoding = true;
 }
