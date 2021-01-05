@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/jbaicoianu/three-volumetric-4dviews/issues"
   },
-  "homepage": "https://github.com/jbaicoianu/three-volumetric-4dviews#readme"
+  "homepage": "https://github.com/jbaicoianu/three-volumetric-4dviews#readme",
+  "dependencies": {
+    "three": "^0.124.0"
+  }
 }
