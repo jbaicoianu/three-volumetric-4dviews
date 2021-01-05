@@ -1,7 +1,7 @@
-importScripts('../lib/4dviews/WebPlayer_v1.0.0/fdvWebplayer/resource_manager.js', '../lib/4dviews/WebPlayer_v1.0.0/fdvWebplayer/CODEC.js');
+importScripts('resource_manager.js', 'CODEC.js');
 
 var firstChunks = false;
-var keepChunksInCache = true;
+var keepChunksInCache = false;
 
 let meshMap = {};
 var meshesCache = [];
