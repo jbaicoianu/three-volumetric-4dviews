@@ -52,7 +52,7 @@ function Decode() {
     }
 */
 		/* If a few chunks, download more */
-		if (chunks4D.length < 3000 || (keepChunksInCache==true && chunks4D.length < resourceManager._sequenceInfo.NbFrames*2)){
+		if (chunks4D.length < 1000 || (keepChunksInCache==true && chunks4D.length < resourceManager._sequenceInfo.NbFrames*2)){
       //console.log('download more chunks', chunks4D.length, resourceManager._sequenceInfo.NbFrames*2);
 			resourceManager._internalCacheSize = 20000000; //8 Mo
 			resourceManager.getBunchOfChunks();
