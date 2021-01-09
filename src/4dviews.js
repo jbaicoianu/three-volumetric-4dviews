@@ -17,8 +17,7 @@ data, then transfers ownership back to the main thread.
  
 let VOLUMETRIC_WORKER_PATH;
 if (typeof VOLUMETRIC_WORKER_PATH == 'undefined') {
-  //VOLUMETRIC_WORKER_PATH = "https://baicoianu.com/~bai/4dview/WebPlayer_v1.0.0/example/js/fdvWebplayer/";
-  VOLUMETRIC_WORKER_PATH = "../src/";
+  VOLUMETRIC_WORKER_PATH = "/assets/three-volumetric-4dviews/";
 }
 
 class VolumetricFrame4DViews {
@@ -50,6 +49,9 @@ class VolumetricPlayer4DViews extends EventTarget {
     this.lighting = lighting;
   }
   load(url) {
+    if (typeof url == 'object') {
+      url = url.url;
+    }
     return new Promise((resolve, reject) => {
       if (!this.worker) {
         this.worker = new Worker(VOLUMETRIC_WORKER_PATH + '4dviews-worker.js');
@@ -71,7 +73,6 @@ class VolumetricPlayer4DViews extends EventTarget {
           }
         });
       }
-console.log('make normal worker', this.lighting);
       if (this.lighting && !this.normalworker) {
         this.normalworker = new Worker(VOLUMETRIC_WORKER_PATH + 'normalworker.js');
         this.normalworker.addEventListener('message', ev => {
@@ -84,7 +85,6 @@ console.log('make normal worker', this.lighting);
     });
   }
   updateSequenceInfo(sequenceInfo) {
-console.log('got sequence info', sequenceInfo);
     this.sequenceInfo = sequenceInfo;
     this.initBuffers(sequenceInfo);
   }
@@ -92,16 +92,14 @@ console.log('got sequence info', sequenceInfo);
     for (let i = 0; i < this.cacheframes; i++) {
       this.framecache[i] = new VolumetricFrame4DViews(sequenceInfo);
     }
-console.log('created the framecache', this.framecache);
   }
   play() {
-console.log('play!');
     // TODO - we should start the worker going, then wait until we have a few frames buffered up before we start using them
     // This will allow us to maintain smoother frame timing
     //this.prefetchFrames(this.currentframe);
-    setInterval(() => {
+    this.frameinterval = setInterval(() => {
       let framedata = this.framecache[this.currentframe % this.cacheframes];
-      if (framedata.ready) {
+      if (framedata.ready && document.visibilityState == 'visible') {
         this.setActiveFrame(this.currentframe);
         this.currentframe++;
         if (this.currentframe >= this.sequenceInfo.NbFrames) {
@@ -110,6 +108,19 @@ console.log('play!');
         this.prefetchFrames();
       }
     }, 1000 / this.sequenceInfo.FrameRate);
+  }
+  pause() {
+    if (!this.frameinterval) {
+      clearTimeout(this.frameinterval);
+      this.frameinterval = false;
+    }
+  }
+  stop() {
+    if (this.frameinterval) {
+      clearTimeout(this.frameinterval);
+      this.currentframe = 0;
+      this.setActiveFrame(0);
+    }
   }
   seek(frame) {
   }

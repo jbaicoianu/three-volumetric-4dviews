@@ -15,14 +15,19 @@ import {
   ClampToEdgeWrapping,
   LinearFilter,
   sRGBEncoding,
-} from 'https://unpkg.com/three@0.123.0/build/three.module.js';
+  LinearEncoding,
+} from 'three';
 import { VolumetricPlayer4DViews } from './4dviews.js';
 
 class Volumetric4DViewsLoader extends Loader {
-  load(src) {
+  constructor(path) {
+    super();
+    this.path = path;
+  }
+  load(src, onLoad, onError, onProgress) {
     if (src) {
-      let obj = new Volumetric4DViewsMesh();
-      return obj.load(src)
+      let obj = new Volumetric4DViewsMesh(this.path);
+      return obj.load(src, onLoad, onError, onProgress)
     }
   }
 }
@@ -31,13 +36,14 @@ class Volumetric4DViewsMesh extends Object3D {
   constructor() {
     super();
   }
-  load(src) {
+  load(src, onLoad, onError, onProgress) {
     return new Promise((resolve, reject) => {
       if (src) {
         this.player = new VolumetricPlayer4DViews(this.lighting);
-  console.log('created 4dviews player', this.player);
+  console.log('created 4dviews player', this.player, onLoad);
         this.player.load(src).then(ev => this.play(ev));
         this.player.addEventListener('frame', (ev) => this.handleFrame(ev, resolve));
+        if (onLoad) { onLoad(this); }
       }
     });
   }
