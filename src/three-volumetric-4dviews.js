@@ -24,6 +24,9 @@ class Volumetric4DViewsLoader extends Loader {
     super();
     this.path = path;
   }
+  setPath(path) {
+    this.path = path;
+  }
   load(src, onLoad, onError, onProgress) {
     if (src) {
       let obj = new Volumetric4DViewsMesh(this.path);
@@ -33,14 +36,15 @@ class Volumetric4DViewsLoader extends Loader {
 }
 
 class Volumetric4DViewsMesh extends Object3D {
-  constructor() {
+  constructor(path='') {
     super();
+    this.path = path;
   }
   load(src, onLoad, onError, onProgress) {
     return new Promise((resolve, reject) => {
       if (src) {
-        this.player = new VolumetricPlayer4DViews(this.lighting);
-  console.log('created 4dviews player', this.player, onLoad);
+        this.player = new VolumetricPlayer4DViews(this.lighting, this.path);
+        //console.log('created 4dviews player', this.player, this.path, onLoad);
         this.player.load(src).then(ev => this.play(ev));
         this.player.addEventListener('frame', (ev) => this.handleFrame(ev, resolve));
         if (onLoad) { onLoad(this); }
@@ -48,7 +52,13 @@ class Volumetric4DViewsMesh extends Object3D {
     });
   }
   play() {
-    console.log('4dviews volumetric video is now playing', this);
+    if (this.mesh) this.mesh.play();
+  }
+  pause() {
+    if (this.mesh) this.mesh.pause();
+  }
+  stop() {
+    if (this.mesh) this.mesh.stop();
   }
   handleLoad(ev) {
   }

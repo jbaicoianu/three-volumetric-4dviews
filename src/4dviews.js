@@ -15,11 +15,6 @@ data, then transfers ownership back to the main thread.
 
 */
  
-let VOLUMETRIC_WORKER_PATH;
-if (typeof VOLUMETRIC_WORKER_PATH == 'undefined') {
-  VOLUMETRIC_WORKER_PATH = "/assets/three-volumetric-4dviews/";
-}
-
 class VolumetricFrame4DViews {
   constructor(seq) {
     this.frame = 0;
@@ -39,7 +34,7 @@ class VolumetricFrame4DViews {
   }
 }
 class VolumetricPlayer4DViews extends EventTarget {
-  constructor(lighting=false) {
+  constructor(lighting=false, path='') {
     super();
     this.framecache = [];
     this.cacheframes = 30;
@@ -47,6 +42,7 @@ class VolumetricPlayer4DViews extends EventTarget {
     this.autoplay = true;
     this.loop = true;
     this.lighting = lighting;
+    this.path = path;
   }
   load(url) {
     if (typeof url == 'object') {
@@ -54,7 +50,7 @@ class VolumetricPlayer4DViews extends EventTarget {
     }
     return new Promise((resolve, reject) => {
       if (!this.worker) {
-        this.worker = new Worker(VOLUMETRIC_WORKER_PATH + '4dviews-worker.js');
+        this.worker = new Worker(this.path + '4dviews-worker.js');
         this.worker.addEventListener('message', ev => {
           let msg = ev.data;
           if (msg.type == 'initialized') {
@@ -74,7 +70,7 @@ class VolumetricPlayer4DViews extends EventTarget {
         });
       }
       if (this.lighting && !this.normalworker) {
-        this.normalworker = new Worker(VOLUMETRIC_WORKER_PATH + 'normalworker.js');
+        this.normalworker = new Worker(this.path + 'normalworker.js');
         this.normalworker.addEventListener('message', ev => {
           let framedata = ev.data;
           this.framecache[framedata.frame % this.cacheframes] = framedata;
