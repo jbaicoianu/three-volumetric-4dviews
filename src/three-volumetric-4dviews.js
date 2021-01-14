@@ -20,45 +20,45 @@ import {
 import { VolumetricPlayer4DViews } from './4dviews.js';
 
 class Volumetric4DViewsLoader extends Loader {
-  constructor(path) {
+  constructor(workerScriptURL='4dviews-worker.js') {
     super();
-    this.path = path;
+    this.workerScriptURL = workerScriptURL;
   }
-  setPath(path) {
-    this.path = path;
+  setWorkerScriptURL(workerScriptURL) {
+    this.workerScriptURL = workerScriptURL;
   }
   load(src, onLoad, onError, onProgress) {
     if (src) {
-      let obj = new Volumetric4DViewsMesh(this.path);
+      let obj = new Volumetric4DViewsMesh(this.workerScriptURL);
       return obj.load(src, onLoad, onError, onProgress)
     }
   }
 }
 
 class Volumetric4DViewsMesh extends Object3D {
-  constructor(path='') {
+  constructor(workerScriptURL='') {
     super();
-    this.path = path;
+    this.workerScriptURL = workerScriptURL;
   }
   load(src, onLoad, onError, onProgress) {
     return new Promise((resolve, reject) => {
       if (src) {
-        this.player = new VolumetricPlayer4DViews(this.lighting, this.path);
-        //console.log('created 4dviews player', this.player, this.path, onLoad);
-        this.player.load(src).then(ev => this.play(ev));
+        this.player = new VolumetricPlayer4DViews(this.lighting, this.workerScriptURL);
+        //console.log('created 4dviews player', this.player, this.workerScriptURL, onLoad);
+        this.player.load(src);//.then(ev => this.play(ev));
         this.player.addEventListener('frame', (ev) => this.handleFrame(ev, resolve));
         if (onLoad) { onLoad(this); }
       }
     });
   }
   play() {
-    if (this.mesh) this.mesh.play();
+    if (this.player) this.player.play();
   }
   pause() {
-    if (this.mesh) this.mesh.pause();
+    if (this.player) this.player.pause();
   }
   stop() {
-    if (this.mesh) this.mesh.stop();
+    if (this.player) this.player.stop();
   }
   handleLoad(ev) {
   }
@@ -98,8 +98,6 @@ class Volumetric4DViewsMesh extends Object3D {
     this.mesh.castShadow = true;
     this.mesh.receiveShadow = true;
     this.mesh.rotation.x = -Math.PI / 2;
-
-console.log('4dviews created a mesh', this.mesh);
 
     this.add(this.mesh);
     resolve(this);

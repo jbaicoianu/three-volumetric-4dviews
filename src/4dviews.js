@@ -34,7 +34,7 @@ class VolumetricFrame4DViews {
   }
 }
 class VolumetricPlayer4DViews extends EventTarget {
-  constructor(lighting=false, path='') {
+  constructor(lighting=false, workerScriptURL='4dviews-worker.js') {
     super();
     this.framecache = [];
     this.cacheframes = 30;
@@ -42,7 +42,7 @@ class VolumetricPlayer4DViews extends EventTarget {
     this.autoplay = true;
     this.loop = true;
     this.lighting = lighting;
-    this.path = path;
+    this.workerScriptURL = workerScriptURL;
   }
   load(url) {
     if (typeof url == 'object') {
@@ -50,27 +50,30 @@ class VolumetricPlayer4DViews extends EventTarget {
     }
     return new Promise((resolve, reject) => {
       if (!this.worker) {
-        this.worker = new Worker(this.path + '4dviews-worker.js');
+        this.worker = new Worker(this.workerScriptURL);
         this.worker.addEventListener('message', ev => {
           let msg = ev.data;
           if (msg.type == 'initialized') {
             this.worker.postMessage({type: 'load', src: url});
           } else if (msg.type == 'loaded') {
+            console.log('got load event', msg);
             this.updateSequenceInfo(msg.sequenceInfo);
+            this.prefetchFrames();
             if (this.autoplay) {
-              this.prefetchFrames();
               setTimeout(() => {
                 this.play();
               }, 1000);
             }
-            resolve();
+            resolve(this);
           } else if (msg.type == 'frame') {
             this.updateFrameData(msg.framedata);
           }
         });
       }
+      // TODO - need to make normalworker js code available in the worker bundle, then pass messages to generate normals
+      /*
       if (this.lighting && !this.normalworker) {
-        this.normalworker = new Worker(this.path + 'normalworker.js');
+        this.normalworker = new Worker(this.workerScriptURL);
         this.normalworker.addEventListener('message', ev => {
           let framedata = ev.data;
           this.framecache[framedata.frame % this.cacheframes] = framedata;
@@ -78,6 +81,7 @@ class VolumetricPlayer4DViews extends EventTarget {
           framedata.played = false;
         });
       }
+      */
     });
   }
   updateSequenceInfo(sequenceInfo) {
@@ -93,6 +97,10 @@ class VolumetricPlayer4DViews extends EventTarget {
     // TODO - we should start the worker going, then wait until we have a few frames buffered up before we start using them
     // This will allow us to maintain smoother frame timing
     //this.prefetchFrames(this.currentframe);
+    if (this.frameinterval) {
+      clearInterval(this.frameinterval);
+      this.frameinterval = false;
+    } else {
     this.frameinterval = setInterval(() => {
       let framedata = this.framecache[this.currentframe % this.cacheframes];
       if (framedata.ready && document.visibilityState == 'visible') {
@@ -104,10 +112,11 @@ class VolumetricPlayer4DViews extends EventTarget {
         this.prefetchFrames();
       }
     }, 1000 / this.sequenceInfo.FrameRate);
+    }
   }
   pause() {
-    if (!this.frameinterval) {
-      clearTimeout(this.frameinterval);
+    if (this.frameinterval) {
+      clearInterval(this.frameinterval);
       this.frameinterval = false;
     }
   }
