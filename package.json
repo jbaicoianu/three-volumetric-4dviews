@@ -1,6 +1,6 @@
 {
   "name": "three-volumetric-4dviews",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ThreeJS loader for 4dviews volumetric video format",
   "main": "src/three-volumetric-4dviews.js",
   "type": "module",
